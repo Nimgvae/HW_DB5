@@ -1,0 +1,50 @@
+ 1 уровень сложности: используя схему HR решите ряд задач
+
+1.Найти количество сотрудников в каждом департаменте. Вывести departmentid и employeescnt
+
+2.Найти количество сотрудников в каждом департаменте. Вывести departmentname и employeescnt
+
+3.Найти количество сотрудников у каждого менеджера. Вывести managerid и employeescnt
+
+4.Найти количество сотрудников у каждого менеджера. Вывести firstname,  lastname и employees_cnt
+
+5.Найти максимальную зарплату в каждом департаменте. Вывести departmentid и maxsalary
+
+6.Найти сотрудников, у которых наибольшая зарплата в их департаменте
+
+------------------------------------------------------------------------------------------------
+1.
+SELECT department_id, COUNT(*) as employeescnt
+FROM employees
+GROUP BY department_id;
+
+2.
+SELECT d.department_name, COUNT(e.employee_id) as employeescnt
+FROM departments d
+JOIN employees e ON d.department_id = e.department_id
+GROUP BY d.department_name;
+
+3.
+SELECT manager_id, COUNT(employee_id) as employeescnt
+FROM employees
+GROUP BY manager_id;
+
+4.
+SELECT e.first_name, e.last_name, COUNT(m.employee_id) AS employees_cnt
+FROM employees e
+JOIN employees m ON m.manager_id = e.employee_id
+GROUP BY e.first_name, e.last_name;
+
+5.
+SELECT department_id, MAX(salary) AS maxsalary
+FROM employees
+GROUP BY department_id;
+
+6.
+SELECT e.employee_id, e.first_name, e.last_name, e.department_id, e.salary
+FROM employees e
+WHERE e.salary = (
+  SELECT MAX(salary)
+  FROM employees
+  WHERE department_id = e.department_id
+);
